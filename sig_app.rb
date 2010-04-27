@@ -3,6 +3,10 @@ require 'erubis'
 require 'rmagick'
 require 'memcache-client'
 
+set :public,   File.expand_path(File.dirname(__FILE__) + '/public')
+set :views,    File.expand_path(File.dirname(__FILE__) + '/views')
+disable :run, :reload
+
 get '/' do 
   erubis :index
 end
