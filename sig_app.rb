@@ -8,7 +8,7 @@ set :views,    File.expand_path(File.dirname(__FILE__) + '/views')
 disable :run, :reload
 
 get '/' do 
-  erubis :index
+  erb :index
 end
 
 post '/' do
@@ -16,7 +16,7 @@ post '/' do
   cache = MemCache.new
   key = (0...8).map{65.+(rand(25)).chr}.join
   cache.set key, @path
-  erubis "<img src='/signature.png?key=#{key}'><p><a href='/'>start over</a>"
+  erb "<img src='/signature.png?key=#{key}'><p><a href='/'>start over</a>"
 end
 
 get '/signature.png' do
