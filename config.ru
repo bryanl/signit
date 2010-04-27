@@ -1,2 +1,2 @@
 require 'sig_app'
-run Siniatra::Application
+run Sinatra::Application

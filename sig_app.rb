@@ -1,11 +1,16 @@
 require 'sinatra'
 require 'erubis'
 require 'RMagick'
-require 'memcached'
 
 set :public,   File.expand_path(File.dirname(__FILE__) + '/public')
 set :views,    File.expand_path(File.dirname(__FILE__) + '/views')
 disable :run, :reload
+
+configure do
+  require 'memcached'
+  CACHE = Memcached.new
+end
+
 
 get '/' do 
   erb :index
