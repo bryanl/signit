@@ -1,24 +1,24 @@
 require 'sinatra'
-require 'erb'
+require 'erubis'
 require 'rmagick'
-require 'memcached'
+require 'memcache-client'
 
 get '/' do 
-  erb :index
+  erubis :index
 end
 
 post '/' do
   @path = params[:path]
-  cache = Memcached.new
+  cache = MemCache.new
   key = (0...8).map{65.+(rand(25)).chr}.join
   cache.set key, @path
-  erb "<img src='/signature.png?key=#{key}'><p><a href='/'>start over</a>"
+  erubis "<img src='/signature.png?key=#{key}'><p><a href='/'>start over</a>"
 end
 
 get '/signature.png' do
   content_type 'image/png'
 
-  cache = Memcached.new
+  cache = MemCache.new
   path = cache.get params[:key]
 
   canvas = Magick::Image.new(500, 200)
