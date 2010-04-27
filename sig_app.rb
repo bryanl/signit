@@ -21,7 +21,7 @@ post '/' do
   cache = Memcached.new
   key = (0...8).map{65.+(rand(25)).chr}.join
   cache.set key, @path
-  erb "<img src='/signature.png?key=#{key}'><p><a href='/'>start over</a>"
+  erb "<img src='/signature.png?key=#{key}'><p><a href='/'>start over</a><p>#{@path}</p>"
 end
 
 get '/signature.png' do
