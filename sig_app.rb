@@ -1,7 +1,6 @@
-require 'rubygems'
 require 'sinatra'
 require 'erubis'
-require 'rmagick'
+require 'RMagick'
 require 'memcache-client'
 
 set :public,   File.expand_path(File.dirname(__FILE__) + '/public')
