@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'erubis'
 require 'RMagick'
-require 'memcache-client'
+require 'memcached'
 
 set :public,   File.expand_path(File.dirname(__FILE__) + '/public')
 set :views,    File.expand_path(File.dirname(__FILE__) + '/views')
@@ -13,7 +13,7 @@ end
 
 post '/' do
   @path = params[:path]
-  cache = MemCache.new
+  cache = Memcached.new
   key = (0...8).map{65.+(rand(25)).chr}.join
   cache.set key, @path
   erb "<img src='/signature.png?key=#{key}'><p><a href='/'>start over</a>"
@@ -22,7 +22,7 @@ end
 get '/signature.png' do
   content_type 'image/png'
 
-  cache = MemCache.new
+  cache = Memcached.new
   path = cache.get params[:key]
 
   canvas = Magick::Image.new(500, 200)
