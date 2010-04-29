@@ -1,22 +1,3 @@
-<html>
-<head>
-<title>Free Hand Demo</title>
-<script src="jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="raphael-min.js" type="text/javascript" charset="utf-8"></script>
-<script src="freehand.js" type="text/javascript" charset="utf-8"></script>
-
-<style type="text/css" media="screen">
-  #signature {
-    border: 1px solid #000;
-    height: 250px;
-    width: 500px;
-    cursor: crosshair;
-  }
-</style>
-
-</head>
-<body>
-
 <div id="signature"></div>
 <form method="POST" id='signature_form'>
   <input type="hidden" name="path" value="">
@@ -27,6 +8,4 @@
 <script type="text/javascript" language="javascript" charset="utf-8">
   $("#signature").signaturepad();
 </script>
-</body>
-</html>
 

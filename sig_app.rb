@@ -46,3 +46,36 @@ get '/signature.png' do
   canvas.format = 'png'
   canvas.to_blob
 end
+
+__END__
+
+@@ layout
+<html>
+<head>
+<title>signit!</title>
+<script src="jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="raphael-min.js" type="text/javascript" charset="utf-8"></script>
+<script src="freehand.js" type="text/javascript" charset="utf-8"></script>
+
+<style type="text/css" media="screen">
+  #signature {
+    border: 1px solid #000;
+    height: 250px;
+    width: 500px;
+    cursor: crosshair;
+  }
+</style>
+</head>
+<body>
+<%= yield %>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-358596-5");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
