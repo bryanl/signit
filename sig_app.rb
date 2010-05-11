@@ -1,41 +1,27 @@
 require 'sinatra'
 require 'erubis'
 require 'RMagick'
+require 'memcached'
+require 'digest/md5'
 
 set :public,   File.expand_path(File.dirname(__FILE__) + '/public')
 set :views,    File.expand_path(File.dirname(__FILE__) + '/views')
 disable :run, :reload
 
 configure do
-  require 'memcached'
   CACHE = Memcached.new
 end
-
 
 get '/' do 
   erb :index
 end
 
-post '/' do
-  @path = params[:path]
-  cache = Memcached.new
-  key = (0...8).map{65.+(rand(25)).chr}.join
-  cache.set key, @path
-  erb "<img src='/signature.png?key=#{key}'><p><a href='/'>start over</a>"
-end
-
-get '/signature.png' do
-  content_type 'image/png'
-
-  cache = Memcached.new
-  path = cache.get params[:key]
-
+def path2png(path)
   canvas = Magick::Image.new(500, 200)
   gc = Magick::Draw.new
   gc.stroke('black')
   gc.stroke_width(1)
 
-  path = cache.get params[:key]
   path.split(/ /).each do |stroke|
     stroke.scan(%r{^M(\d+,\d+),(\d+,\d+)$}) {
       gc.path("M#{$1} L#{$2}")
@@ -47,12 +33,26 @@ get '/signature.png' do
   canvas.to_blob
 end
 
+post '/' do
+  path = params[:path]
+  key = Digest::MD5.hexdigest(path)
+  CACHE.set key, path2png(path)
+  erb "<img src='/signatures/#{key}.png'/><p><a href='/'>start over</a>"
+end
+
+get '/signatures/:key.png' do
+  content_type 'image/png'
+
+  CACHE.get params[:key]
+end
+
 __END__
 
 @@ layout
 <html>
 <head>
 <title>signit!</title>
+<meta name="viewport" content="user-scalable=no,width=device-width, maximum-scale=1.0" />
 <script src="jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="raphael-min.js" type="text/javascript" charset="utf-8"></script>
 <script src="freehand.js" type="text/javascript" charset="utf-8"></script>
@@ -60,13 +60,13 @@ __END__
 <style type="text/css" media="screen">
   #signature {
     border: 1px solid #000;
-    height: 250px;
-    width: 500px;
+    height: 150px;
+    width: 300px;
     cursor: crosshair;
   }
 </style>
 </head>
-<body>
+<body ontouchmove="event.preventDefault();return false;">
 <%= yield %>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
